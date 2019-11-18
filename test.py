@@ -9,6 +9,7 @@ import unittest
 
 import config
 import results
+import sending
 
 
 with open(os.path.join(os.path.dirname(__file__),
@@ -46,9 +47,14 @@ config_expected = {'example.com': 'abc@example.com',
                    'cert.at': 'reports@cert.at',
                    'nic.at': 'reports@cert.at',
                    }
+sending_expected = {
+    'abc@example.com': [result_expected[0]],
+    }
 
 
 class TestCertspotterProcessing(unittest.TestCase):
+    maxDiff = None
+
     def test_config_reader(self):
         result = config.read_string(config_string)
         self.assertEqual(result, config_expected)
@@ -64,6 +70,12 @@ class TestCertspotterProcessing(unittest.TestCase):
     def test_result_reader_fileobj_string(self):
         result = list(results.read_data(io.StringIO(result_string)))
         self.assertEqual(result, result_expected)
+
+    def test_sending_grouping(self):
+        result = sending.group_by_mail(result_expected, config_expected)
+        import pprint
+        pprint.pprint(result)
+        self.assertEqual(dict(result), sending_expected)
 
 
 if __name__ == '__main__':
