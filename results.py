@@ -3,7 +3,9 @@
 """
 Methods to work with certspotter's results
 """
+import argparse
 import io
+import json
 from typing import Generator, Union
 
 __all__ = ['read_data']
@@ -19,11 +21,16 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
 
     Returns:
         result: dictionary with the lines as key-value pairs
+
+    ToDo: Keep "raw" data
     """
     if isinstance(input_data, str):
         iterator = input_data.splitlines()
-    elif isinstance(input_data, io.IOBase):
+    elif isinstance(input_data, (io.IOBase, argparse.FileType)):
         iterator = input_data
+    else:
+        raise TypeError('Could not detect how to handle input of type'
+                        '%r.' % type(input_data))
 
     result = {}
     for line in iterator:
@@ -49,3 +56,13 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
             result = {}
             result['id'] = line.strip(' :')
     yield result  # final block
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('certspotter_results', type=argparse.FileType('r'),
+                        help="certspotter's results file, - for stdin")
+    parser.add_argument('parsing_results', type=argparse.FileType('w'),
+                        help="parsed results as JSON, - for stdout")
+    args = parser.parse_args()
+    json.dump(list(read_data(args.certspotter_results)), args.parsing_results)
