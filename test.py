@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 30 13:21:26 2019
-
-@author: sebastian
+Some unit tests
 """
-
+import io
 import os
 import unittest
 
@@ -54,8 +52,16 @@ class TestCertspotterProcessing(unittest.TestCase):
                     }
         self.assertEqual(result, expected)
 
-    def test_result_reader(self):
-        result = list(results.read_string(result_string))
+    def test_result_reader_string(self):
+        result = list(results.read_data(result_string))
+        self.assertEqual(result, result_expected)
+
+    def test_result_reader_fileobj_bytes(self):
+        result = list(results.read_data(io.BytesIO(result_string.encode())))
+        self.assertEqual(result, result_expected)
+
+    def test_result_reader_fileobj_string(self):
+        result = list(results.read_data(io.StringIO(result_string)))
         self.assertEqual(result, result_expected)
 
 
