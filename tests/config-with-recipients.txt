@@ -1,0 +1,6 @@
+# abc@example.com
+example.com
+example.net
+# reports@cert.at
+cert.at
+nic.at
