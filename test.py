@@ -40,17 +40,18 @@ result_expected = [
      'crt.sh': 'https://crt.sh/?sha256=oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7',
      'Filename': '/home/user/.certspotter/certs/oe/oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7.cert.pem'}
      ]
+config_expected = {'example.com': 'abc@example.com',
+                   'example.net': 'abc@example.com',
+                   'example.at': 'abc@example.com',
+                   'cert.at': 'reports@cert.at',
+                   'nic.at': 'reports@cert.at',
+                   }
 
 
 class TestCertspotterProcessing(unittest.TestCase):
     def test_config_reader(self):
         result = config.read_string(config_string)
-        expected = {'example.com': 'abc@example.com',
-                    'example.net': 'abc@example.com',
-                    'cert.at': 'reports@cert.at',
-                    'nic.at': 'reports@cert.at',
-                    }
-        self.assertEqual(result, expected)
+        self.assertEqual(result, config_expected)
 
     def test_result_reader_string(self):
         result = list(results.read_data(result_string))

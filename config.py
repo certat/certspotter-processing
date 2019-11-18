@@ -8,6 +8,7 @@ Methods to work with certspotter's configuration
 def read_string(string: str) -> dict:
     """
     Reads a configuration string and returns a dictionary of domain -> comment mapping
+    Leading and trailing dots are removed from domains
 
     Parameters:
         string: the configuration as string
@@ -19,7 +20,7 @@ def read_string(string: str) -> dict:
 
     last_comment = ''
     for line in string.splitlines():
-        line = line.strip()
+        line = line.strip().strip('.')
         if not line:
             continue
         if line.startswith('#'):
