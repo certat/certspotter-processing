@@ -62,7 +62,7 @@ class DomainTreeNode(defaultdict):
 setattr(DomainTreeNode, 'default_factory', DomainTreeNode)
 
 
-def read_string(string: str) -> dict:
+def read_string_to_dict(string: str) -> dict:
     """
     Reads a configuration string and returns a dictionary of domain -> comment mapping
     Leading and trailing dots are removed from domains

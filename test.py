@@ -53,12 +53,14 @@ sending_expected = {
     }
 
 
-class TestCertspotterProcessing(unittest.TestCase):
-    maxDiff = None
+class TestCertspotterConfig(unittest.TestCase):
 
     def test_config_reader(self):
-        result = config.read_string(config_string)
+        result = config.read_string_to_dict(config_string)
         self.assertEqual(result, config_expected)
+
+
+class TestCertspotterResult(unittest.TestCase):
 
     def test_result_reader_string(self):
         result = list(results.read_data(result_string))
@@ -71,6 +73,10 @@ class TestCertspotterProcessing(unittest.TestCase):
     def test_result_reader_fileobj_string(self):
         result = list(results.read_data(io.StringIO(result_string)))
         self.assertEqual(result, result_expected)
+
+
+class TestCertspotterSending(unittest.TestCase):
+    maxDiff = None
 
     def test_sending_grouping(self):
         result = sending.group_by_mail(result_expected, config_expected)
