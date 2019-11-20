@@ -78,5 +78,47 @@ class TestCertspotterProcessing(unittest.TestCase):
         self.assertEqual(dict(result), sending_expected)
 
 
+class TestDomainTree(unittest.TestCase):
+
+    def test_basics(self):
+        tree = config.DomainTreeNode()
+        tree['com'] = config.DomainTreeNode()
+        tree['com']['example'] = config.DomainTreeNode()
+        tree['com']['example'].addresses.append('user@example.com')
+        tree['com']['another'] = config.DomainTreeNode()
+        tree['com']['another'].addresses.append('user@another.com')
+
+        self.assertEqual(tree['com'].addresses, [])
+        self.assertEqual(tree['com']['example'].addresses, ['user@example.com'])
+        tree['com'].addresses.append('com@example.com')
+
+    def test_add_domain(self):
+        tree = config.DomainTreeNode()
+        tree.add_domain('.example.com', addresses=['foo'])
+        self.assertEqual(tree['com']['example'].addresses, ['foo'])
+        tree.add_domain('another.com', addresses=['bar'])
+        self.assertEqual(tree['com']['example'].addresses, ['foo'])
+        self.assertEqual(tree['com']['another'].addresses, ['bar'])
+
+    def test_get_all_addresses(self):
+        tree = config.DomainTreeNode()
+        tree.add_domain('com', addresses=['com@'])
+        tree.add_domain('example.com', addresses=['example@'])
+        tree.add_domain('www.example.com', addresses=['www@'])
+        tree.add_domain('another.com', addresses=['another@'])
+        self.assertEqual(tree.get_all_addresses('example.com'),
+                         {'com@', 'example@'})
+        self.assertEqual(tree.get_all_addresses('www.example.com'),
+                         {'com@', 'example@', 'www@'})
+
+    def test_get_all_addresses_wildcard(self):
+        tree = config.DomainTreeNode()
+        tree.add_domain('www.example.com', addresses=['www@'])
+        tree.add_domain('sub.example.com', addresses=['sub@'])
+        tree.add_domain('sub.www.example.com', addresses=['subwww@'])
+        self.assertEqual(tree.get_all_addresses('*.example.com'),
+                         {'sub@', 'www@'})
+
+
 if __name__ == '__main__':
     unittest.main()
