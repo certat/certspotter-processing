@@ -49,7 +49,7 @@ config_expected = {'example.com': 'abc@example.com',
                    'nic.at': 'reports@cert.at',
                    }
 sending_expected = {
-    'abc@example.com': [result_expected[0]],
+    'abc@example.com': result_expected,
     }
 
 
@@ -86,9 +86,8 @@ class TestCertspotterSending(unittest.TestCase):
     maxDiff = None
 
     def test_sending_grouping(self):
-        result = sending.group_by_mail(result_expected, config_expected)
-        import pprint
-        pprint.pprint(result)
+        config_tree = config.read_string_to_tree(config_string)
+        result = sending.group_by_mail(result_expected, config_tree)
         self.assertEqual(dict(result), sending_expected)
 
 

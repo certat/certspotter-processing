@@ -3,23 +3,66 @@
 """
 Tools to send the data
 """
+import argparse
+import configparser
+import os
 from collections import defaultdict
-import warnings
+
+import rt
+from config import DomainTreeNode, read_string_to_tree
+from results import read_data
+
+HOME = os.environ['HOME']
 
 
-def group_by_mail(results, config):
+def group_by_mail(results: list, config: DomainTreeNode) -> dict:
     """
-    TODO: Handle wildcards and subdomains
+    Group results by contact with a configuration
     """
     retval = defaultdict(list)
     for result in results:
         addresses = set()
         for domain in result['DNS Name']:
-            domain = domain.strip('*.')
-            if domain in config:
-                addresses.add(config[domain])
-            else:
-                warnings.warn('Could not map domain %r to an address.' % domain)
+            addresses = addresses.union(config.get_all_addresses(domain))
         for address in addresses:
             retval[address].append(result)
     return retval
+
+
+def send_results_via_rtir(resultfile, watchlistfile, configfile):
+    config = configparser.ConfigParser()
+    config.read_file(configfile)
+
+    ticketing = rt.Rt(config['rt']['uri'], config['rt']['username'],
+                      config['rt']['password'])
+    if not ticketing.login():
+        raise ValueError('Login to RT not successful.')
+
+    grouped = group_by_mail(read_data(resultfile),
+                            read_string_to_tree(watchlistfile.read()))
+
+    for address, data in grouped.items():
+        ticket_id = ticketing.create_ticket(Queue=config['rt']['queue'],
+                                            Subject='certspotter result',
+                                            Owner=config['rt']['username'],
+                                            Requestor=address,
+                                            Status='resolved')
+        if not ticket_id:
+            raise ValueError('Creating RT ticket not successful.')
+
+        text = '\n\n'.join(['\n'.join(['%s: %s' % row for row in block.items()]) for block in data])
+        correspond = ticketing.reply(ticket_id, text=text)
+        if not correspond:
+            raise ValueError('Corresponding on RT ticket not successful.')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('results', type=argparse.FileType('r'))
+    parser.add_argument('watchlist', type=argparse.FileType('r'),
+                        default='%s/.certspotter/watchlist' % HOME)
+    parser.add_argument('--config', type=argparse.FileType('r'),
+                        default='%s/.config/certspotter_processing.ini' % HOME)
+    args = parser.parse_args()
+
+    send_results_via_rtir(args.results, args.watchlist, args.config)
