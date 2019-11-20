@@ -17,6 +17,9 @@ class DomainTreeNode(defaultdict):
             raise ValueError('Wildcards are not supported in the configuration')
         super().__setitem__(*args, **kwargs)
 
+    def __repr__(self):
+        return 'DomainTreeNode(%r, %r)' % (self.addresses, dict(self))
+
     def add_domain(self, domain, addresses=None):
         domain = domain.strip('.').split('.')
         domain.reverse()
@@ -97,5 +100,5 @@ def read_string_to_tree(string: str) -> DomainTreeNode:
 
     tree = DomainTreeNode()
     for domain, comment in config.items():
-        tree.add_domain(domain, addresses=map(str.strip, comment.split(',')))
+        tree.add_domain(domain, addresses=list(map(str.strip, comment.split(','))))
     return tree
