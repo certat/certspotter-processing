@@ -5,6 +5,7 @@ Tools to send the data
 """
 import argparse
 import configparser
+import json
 import os
 from collections import defaultdict
 
@@ -58,6 +59,8 @@ def send_results_via_rtir(resultfile, watchlistfile, configfile):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('mode', choices=['group', 'send-rt'],
+                        default='group')
     parser.add_argument('results', type=argparse.FileType('r'))
     parser.add_argument('watchlist', type=argparse.FileType('r'),
                         default='%s/.certspotter/watchlist' % HOME)
@@ -65,4 +68,9 @@ if __name__ == '__main__':
                         default='%s/.config/certspotter_processing.ini' % HOME)
     args = parser.parse_args()
 
-    send_results_via_rtir(args.results, args.watchlist, args.config)
+    if args.mode == 'group':
+        retval = group_by_mail(read_data(args.results),
+                               read_string_to_tree(args.watchlist.read()))
+        print(json.dumps(retval))
+    if args.mode == 'send-rt':
+        send_results_via_rtir(args.results, args.watchlist, args.config)
