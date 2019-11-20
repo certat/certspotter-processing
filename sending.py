@@ -43,18 +43,15 @@ def send_results_via_rtir(resultfile, watchlistfile, configfile):
                             read_string_to_tree(watchlistfile.read()))
 
     for address, data in grouped.items():
+        text = '\n\n'.join(['\n'.join(['%s: %s' % row for row in block.items()]) for block in data])
         ticket_id = ticketing.create_ticket(Queue=config['rt']['queue'],
                                             Subject='certspotter result',
                                             Owner=config['rt']['username'],
                                             Requestor=address,
-                                            Status='resolved')
+                                            Status='resolved',
+                                            Text=text)
         if not ticket_id:
             raise ValueError('Creating RT ticket not successful.')
-
-        text = '\n\n'.join(['\n'.join(['%s: %s' % row for row in block.items()]) for block in data])
-        correspond = ticketing.reply(ticket_id, text=text)
-        if not correspond:
-            raise ValueError('Corresponding on RT ticket not successful.')
 
 
 if __name__ == '__main__':
