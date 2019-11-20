@@ -86,3 +86,16 @@ def read_string_to_dict(string: str) -> dict:
         result[line] = last_comment
 
     return result
+
+
+def read_string_to_tree(string: str) -> DomainTreeNode:
+    """
+    Calls read_string_to_dict for input and converts the result to a
+    DomainTreeNode tree
+    """
+    config = read_string_to_dict(string)
+
+    tree = DomainTreeNode()
+    for domain, comment in config.items():
+        tree.add_domain(domain, addresses=map(str.strip, comment.split(',')))
+    return tree

@@ -59,6 +59,13 @@ class TestCertspotterConfig(unittest.TestCase):
         result = config.read_string_to_dict(config_string)
         self.assertEqual(result, config_expected)
 
+    def test_config_tree(self):
+        result = config.read_string_to_tree(config_string)
+        self.assertEqual(result.get_all_addresses('www.example.com'),
+                         {'abc@example.com'})
+        self.assertEqual(result.get_all_addresses('www.cert.at'),
+                         {'reports@cert.at'})
+
 
 class TestCertspotterResult(unittest.TestCase):
 
