@@ -6,6 +6,7 @@ Some unit tests
 import io
 import os
 import unittest
+import warnings
 
 import config
 import results
@@ -110,6 +111,8 @@ class TestDomainTree(unittest.TestCase):
                          {'com@', 'example@'})
         self.assertEqual(tree.get_all_addresses('www.example.com'),
                          {'com@', 'example@', 'www@'})
+        with self.assertWarns(UserWarning):
+            tree.get_all_addresses('something.abc')
 
     def test_get_all_addresses_wildcard(self):
         tree = config.DomainTreeNode()

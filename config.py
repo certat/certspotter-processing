@@ -48,9 +48,10 @@ class DomainTreeNode(defaultdict):
                     addresses.update(set(next_leaf.addresses))
                 break
             if part not in last_leaf:
-                warnings.warn('Could not attribute domain %r to a '
-                              'configured domain. Failing at %r.'
-                              '' % (orig_domain, part))
+                if last_leaf is self:
+                    warnings.warn('Could not attribute domain %r to a '
+                                  'configured domain. Failing at %r.'
+                                  '' % (orig_domain, part))
                 break
             last_leaf = last_leaf[part]
             addresses.update(set(last_leaf.addresses))
