@@ -55,7 +55,8 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
                 yield result
             result = {}
             result['id'] = line.strip(' :')
-    yield result  # final block
+    if result:
+        yield result  # final block
 
 
 if __name__ == '__main__':
