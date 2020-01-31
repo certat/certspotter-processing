@@ -30,7 +30,7 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
     elif isinstance(input_data, (io.IOBase, argparse.FileType)):
         iterator = input_data
     else:
-        raise TypeError('Could not detect how to handle input of type'
+        raise TypeError('Could not detect how to handle input of type '
                         '%r.' % type(input_data))
 
     result = OrderedDict()
@@ -54,7 +54,7 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
         else:
             if result:
                 yield result
-            result = {}
+            result = OrderedDict()
             result['id'] = line.strip(' :')
     if result:
         yield result  # final block
