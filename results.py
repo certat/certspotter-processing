@@ -49,6 +49,8 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
                     result[key].append(value)
                 else:
                     result[key] = [value]
+            elif key == 'Filename':
+                pass
             else:
                 result[key] = value
         else:
