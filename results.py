@@ -4,6 +4,7 @@
 Methods to work with certspotter's results
 """
 import argparse
+from collections import OrderedDict
 import io
 import json
 from typing import Generator, Union
@@ -29,10 +30,10 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
     elif isinstance(input_data, (io.IOBase, argparse.FileType)):
         iterator = input_data
     else:
-        raise TypeError('Could not detect how to handle input of type'
+        raise TypeError('Could not detect how to handle input of type '
                         '%r.' % type(input_data))
 
-    result = {}
+    result = OrderedDict()
     for line in iterator:
         if isinstance(line, bytes):
             line = line.decode()
@@ -53,9 +54,10 @@ def read_data(input_data: Union[str, bytes, io.IOBase]) -> Generator[int, None, 
         else:
             if result:
                 yield result
-            result = {}
+            result = OrderedDict()
             result['id'] = line.strip(' :')
-    yield result  # final block
+    if result:
+        yield result  # final block
 
 
 if __name__ == '__main__':

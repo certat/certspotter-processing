@@ -6,6 +6,7 @@ Tools to send the data
 import argparse
 import configparser
 import json
+import logging
 import os
 from collections import defaultdict
 
@@ -39,10 +40,12 @@ def send_results_via_rtir(resultfile, watchlistfile, configfile):
     if not ticketing.login():
         raise ValueError('Login to RT not successful.')
 
+    logging.debug('Grouping results by mail address...')
     grouped = group_by_mail(read_data(resultfile),
                             read_string_to_tree(watchlistfile.read()))
 
     for address, data in grouped.items():
+        logging.debug('Creating ticket for %s...', address)
         text = '\n\n'.join(['\n'.join(['%s: %s' % row for row in block.items()]) for block in data])
         ticket_id = ticketing.create_ticket(Queue=config['rt']['queue'],
                                             Subject='certspotter result',
@@ -52,6 +55,9 @@ def send_results_via_rtir(resultfile, watchlistfile, configfile):
                                             Text=text)
         if not ticket_id:
             raise ValueError('Creating RT ticket not successful.')
+        logging.debug('Created ticket %d.', ticket_id)
+    else:
+        logging.debug('Empty input data.')
 
 
 if __name__ == '__main__':
@@ -63,7 +69,12 @@ if __name__ == '__main__':
                         default='%s/.certspotter/watchlist' % HOME)
     parser.add_argument('--config', type=argparse.FileType('r'),
                         default='%s/.config/certspotter_processing.ini' % HOME)
+    parser.add_argument('--verbose', action='store_true',
+                        help='Output debugging information')
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(format='%(message)s', level='DEBUG')
 
     if args.mode == 'group':
         retval = group_by_mail(read_data(args.results),

@@ -69,6 +69,10 @@ class TestCertspotterConfig(unittest.TestCase):
 
 class TestCertspotterResult(unittest.TestCase):
 
+    def test_result_reader_no_data(self):
+        result = list(results.read_data(''))
+        self.assertEqual(result, [])
+
     def test_result_reader_string(self):
         result = list(results.read_data(result_string))
         self.assertEqual(result, result_expected)
