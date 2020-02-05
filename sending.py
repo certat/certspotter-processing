@@ -48,7 +48,7 @@ def send_results_via_rtir(resultfile, watchlistfile, configfile):
         logging.debug('Creating ticket for %s...', address)
         text = '\n\n'.join(['\n'.join(['%s: %s' % row for row in block.items()]) for block in data])
         ticket_id = ticketing.create_ticket(Queue=config['rt']['queue'],
-                                            Subject='certspotter result',
+                                            Subject='Certificate Transparency Log Information',
                                             Owner=config['rt']['username'],
                                             Requestor=address,
                                             Status='resolved',
