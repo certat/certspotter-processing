@@ -6,6 +6,7 @@ ahPhe7audomoalejaku5LiweNoish5shee3WioW2ahg4cee6Kie5kongih0eiwae:
 	    Not After = 2015-01-01 23:59:59 +0000 UTC
 	    Log Entry = 123 @ https://ct.googleapis.com/pilot (Certificate)
 	       crt.sh = https://crt.sh/?sha256=ahPhe7audomoalejaku5LiweNoish5shee3WioW2ahg4cee6Kie5kongih0eiwae
+	     Filename = /home/user/.certspotter/certs/ah/ahPhe7audomoalejaku5LiweNoish5shee3WioW2ahg4cee6Kie5kongih0eiwae.cert.pem
 
 oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7:
 	     DNS Name = *.example.at
@@ -16,4 +17,5 @@ oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7:
 	    Not After = 2016-01-01 23:59:59 +0000 UTC
 	    Log Entry = 124 @ https://ct.googleapis.com/pilot (Certificate)
 	       crt.sh = https://crt.sh/?sha256=oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7
+	     Filename = /home/user/.certspotter/certs/oe/oe2ga3ShahThiebeing9ookeece9seivae5ciChaa3ooLaew9luoLoh6uyozish7.cert.pem
 
