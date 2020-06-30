@@ -4,9 +4,9 @@
 Methods to work with certspotter's results
 """
 import argparse
-from collections import OrderedDict
 import io
 import json
+from collections import OrderedDict
 from typing import Generator, Union
 
 __all__ = ['read_data']

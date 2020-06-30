@@ -11,6 +11,7 @@ import os
 from collections import defaultdict
 
 import rt
+
 from config import DomainTreeNode, read_string_to_tree
 from results import read_data
 

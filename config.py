@@ -3,8 +3,8 @@
 """
 Methods to work with certspotter's configuration
 """
-from collections import defaultdict
 import warnings
+from collections import defaultdict
 
 
 class DomainTreeNode(defaultdict):
