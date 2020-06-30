@@ -18,6 +18,9 @@ from results import read_data
 HOME = os.environ['HOME']
 
 
+__all__ = ['group_by_mail', 'send_results_via_rtir']
+
+
 def group_by_mail(results: list, config: DomainTreeNode) -> dict:
     """
     Group results by contact with a configuration

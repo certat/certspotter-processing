@@ -7,6 +7,9 @@ import warnings
 from collections import defaultdict
 
 
+__all__ = ['DomainTreeNode', 'read_string_to_dict', 'read_string_to_tree']
+
+
 class DomainTreeNode(defaultdict):
     def __init__(self, *args, **kwargs):
         self.addresses = list()
@@ -44,7 +47,7 @@ class DomainTreeNode(defaultdict):
         addresses.update(set(last_leaf.addresses))
         for index, part in enumerate(domain):
             if part == '*':
-                if index != len(domain) -1:
+                if index != len(domain) - 1:
                     warnings.warn('Wildcard must be most minor part of a domain (%r).'
                                   '' % orig_domain)
                 for subdomain, next_leaf in last_leaf.items():
