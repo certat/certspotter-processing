@@ -15,3 +15,9 @@
 * group the results by recipient
 
 * send the grouped results via RT
+
+## Run tests
+
+```bash
+> python3 test.py
+```
